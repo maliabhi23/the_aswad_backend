@@ -14,7 +14,9 @@ app.use(express.json());
 
 //import routes for todo app api m
 const todoRoutes=require("./routes/todos");
-app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({ origin: 'http://localhost:3001'
+             "https://theaswadhot.netlify.app",
+             }));
 
 //mount to do api routes 
 app.use("/api/v1",todoRoutes);
