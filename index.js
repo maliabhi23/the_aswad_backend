@@ -1,38 +1,46 @@
-const express=require("express");
-const app=express();
-
-const cors = require('cors');
-
-app.use(cors());
-
-//load config from env file
+const express = require("express");
+const cors = require("cors");
 require("dotenv").config();
-const PORT=process.env.PORT||4000;
 
-//middleware to theparse json request
+// Initialize Express app
+const app = express();
+
+// Load environment variables
+const PORT = process.env.PORT || 4000;
+
+// Middleware to parse JSON requests
 app.use(express.json());
 
-//import routes for todo app api m
-const todoRoutes=require("./routes/todos");
-app.use(cors({ origin: 'http://localhost:3001'
-             "https://theaswadhot.netlify.app",
-             }));
+// CORS Configuration
+const allowedOrigins = [
+  "http://localhost:3001",
+  "https://theaswadhot.netlify.app", // Add your frontend's live URL
+];
 
-//mount to do api routes 
-app.use("/api/v1",todoRoutes);
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
 
-//start server the
-app.listen(PORT,()=>{
-    console.log("Server created successfully ${PORT}")
-})
-// http://localhost:3000/api/v1/dummyLink
-//connect to the database
-const dbConnect=require("./config/database");
+// Import routes for Todo API
+const todoRoutes = require("./routes/todos");
+
+// Mount Todo API routes
+app.use("/api/v1", todoRoutes);
+
+// Connect to the database
+const dbConnect = require("./config/database");
 dbConnect();
 
+// Default route
+app.get("/", (req, res) => {
+  res.send(`<h1>This is the homepage</h1>`);
+});
 
-//default route t
-app.get("/",(req,res)=>{
-    res.send(`<h1>this is the homepage</h1>`)
-})
-
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
